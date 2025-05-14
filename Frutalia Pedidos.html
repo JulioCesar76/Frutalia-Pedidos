@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Frutalia - Jugos Naturales</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fffbe7;
+      color: #333;
+    }
+
+    .cenefa {
+      width: 100%;
+      background: #001f4d; /* Azul marino */
+      overflow: hidden;
+      white-space: nowrap;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .cenefa-texto {
+      display: inline-block;
+      padding: 1rem;
+      font-weight: bold;
+      color: #fff;
+      animation: moverTexto 20s linear infinite;
+    }
+
+    @keyframes moverTexto {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    form#pedidoForm {
+      background: #fff8e1;
+      padding: 1.5rem;
+      margin: 2rem auto;
+      max-width: 500px;
+      border-radius: 12px;
+      border: 5px solid yellow;
+      position: relative;
+      animation: lucesNavidad 2s infinite linear;
+    }
+
+    @keyframes lucesNavidad {
+      0% { box-shadow: 0 0 10px red; }
+      25% { box-shadow: 0 0 10px green; }
+      50% { box-shadow: 0 0 10px blue; }
+      75% { box-shadow: 0 0 10px orange; }
+      100% { box-shadow: 0 0 10px red; }
+    }
+
+    form#pedidoForm label {
+      display: block;
+      margin: 0.75rem 0;
+      font-weight: bold;
+    }
+
+    form#pedidoForm input,
+    form#pedidoForm select,
+    form#pedidoForm textarea {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-top: 0.25rem;
+    }
+
+    form#pedidoForm button {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      background: #ff7043;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    form#pedidoForm button:hover {
+      background: #ff5722;
+    }
+
+    .mensaje-exito {
+      background: #e0f7fa;
+      color: #006064;
+      border: 1px solid #4dd0e1;
+      padding: 1rem;
+      margin: 1rem auto;
+      max-width: 500px;
+      border-radius: 6px;
+    }
+
+    .hidden { display: none; }
+
+    .lista-pedidos {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #fff;
+      border-radius: 12px;
+      border: 2px solid #ccc;
+    }
+
+    .pedido {
+      background: #f1f8e9;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border-radius: 6px;
+      border-left: 5px solid #cddc39;
+    }
+  </style>
+</head>
+<body>
+  <div class="cenefa">
+    <div class="cenefa-texto">🥤 ¡Bienvenido a Frutalia! Jugos naturales listos en 10 minutos 🍍🍓🍊</div>
+  </div>
+
+  <main class="container">
+    <header class="header" style="text-align:center; margin-top: 1rem;">
+      <h1 style="color:#ff5722; font-size: 2.5rem;">Frutalia</h1>
+      <p class="slogan" style="font-size: 1.2rem;">¡Jugos naturales, listos en 10 minutos!</p>
+    </header>
+
+    <form id="pedidoForm">
+      <label>🍍 Nombre del cliente:
+        <input type="text" name="nombre" required />
+      </label>
+
+      <label>📱 Teléfono:
+        <input type="tel" name="telefono" required pattern="[0-9]{10}" />
+      </label>
+
+      <label>🥤 Sabor del jugo:
+        <select name="sabor" required>
+          <option value="">Selecciona</option>
+          <option value="naranja">Naranja</option>
+          <option value="mango">Mango</option>
+          <option value="fresa">Fresa</option>
+          <option value="piña">Piña</option>
+        </select>
+      </label>
+
+      <label>📏 Tamaño:
+        <select name="tamano" required>
+          <option value="">Selecciona</option>
+          <option value="chico">Chico</option>
+          <option value="mediano">Mediano</option>
+          <option value="grande">Grande</option>
+        </select>
+      </label>
+
+      <label>✏️ Comentarios adicionales:
+        <textarea name="comentarios"></textarea>
+      </label>
+
+      <button type="submit">🍹 Enviar Pedido</button>
+    </form>
+
+    <div id="mensajeExito" class="hidden mensaje-exito">
+      <p>✅ Tu pedido ha sido enviado con éxito.<br>Pasa a recogerlo en 10 minutos.<br>¡Frutalia agradece tu preferencia! 🍓</p>
+    </div>
+
+    <section class="lista-pedidos">
+      <h2>Pedidos Recientes</h2>
+      <div id="listaPedidos">Cargando pedidos...</div>
+    </section>
+
+    <footer>
+      <img src="img/frutas-footer.png" alt="Frutas decorativas" class="footer-img" />
+      <p style="text-align:center;">© 2025 Frutalia - Jugos Naturales</p>
+    </footer>
+  </main>
+
+  <script>
+    const form = document.getElementById("pedidoForm");
+    const mensajeExito = document.getElementById("mensajeExito");
+    const listaPedidos = document.getElementById("listaPedidos");
+
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwdixgUBufnUnuHp4Twc_yS8ZQJS62dbC8Rg9Vfbtg-DbF6EURAnUWvfFDqdl7ZEbuh/exec";
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (response.ok) {
+          form.reset();
+          mensajeExito.classList.remove("hidden");
+          cargarPedidos();
+        } else {
+          alert("Hubo un problema al enviar el pedido. Inténtalo nuevamente.");
+        }
+      } catch (error) {
+        console.error("Error al enviar pedido:", error);
+        alert("Error al enviar el pedido. Revisa tu conexión.");
+      }
+    });
+
+    async function cargarPedidos() {
+      try {
+        const response = await fetch(SCRIPT_URL);
+        const data = await response.json();
+
+        listaPedidos.innerHTML = "";
+        data.reverse().forEach(pedido => {
+          const div = document.createElement("div");
+          div.className = "pedido";
+          div.innerHTML = `
+            <strong>Nombre:</strong> ${pedido.nombre}<br>
+            <strong>Teléfono:</strong> ${pedido.telefono}<br>
+            <strong>Sabor:</strong> ${pedido.sabor}<br>
+            <strong>Tamaño:</strong> ${pedido.tamano}<br>
+            <strong>Comentarios:</strong> ${pedido.comentarios || "Ninguno"}
+          `;
+          listaPedidos.appendChild(div);
+        });
+      } catch (error) {
+        console.error("Error al cargar pedidos:", error);
+        listaPedidos.innerText = "No se pudieron cargar los pedidos.";
+      }
+    }
+
+    cargarPedidos();
+  </script>
+</body>
+</html>
